@@ -3,6 +3,8 @@ require_relative "../../gloss.rb"
 module Kramdown
   module Converter
     class Bbcode < Base
+      include ::Kramdown::Utils::Html
+
       DISPATCHER = Hash.new {|h,k| h[k] = "convert_#{k}"} #:nodoc:
 
       def initialize(root, options)
@@ -46,6 +48,10 @@ module Kramdown
 
       def convert_a(el, opts)
         tag("url", el.attr['href'], inner(el, opts))
+      end
+
+      def convert_smart_quote(el, indent)
+        entity_to_str(smart_quote_entity(el))
       end
 
       def convert_gloss(el, opts)

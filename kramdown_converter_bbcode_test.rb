@@ -29,6 +29,10 @@ class TestKramdownConverterBbcode < Test::Unit::TestCase
                   "[here](http://example.com)")
   end
 
+  def test_should_process_smart_quotes
+    assert_bbcode("A “foo” ", "A \"foo\" ")
+  end
+
   def test_should_handle_inline_transliteration
     assert_bbcode("[i]mꜣꜥ ḫrw[/i]", "{mAa xrw}")
   end
