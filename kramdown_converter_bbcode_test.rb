@@ -23,6 +23,10 @@ class TestKramdownConverterBbcode < Test::Unit::TestCase
     assert_bbcode("[b]Hello[/b]", "# Hello")
   end
 
+  def test_should_process_blockquotes
+    assert_bbcode("[quote]Hello there[/quote]", "> Hello\n> there")
+  end
+
   def test_should_process_codeblocks
     assert_bbcode("[code]Hello\nthere[/code]", "    Hello\n    there")
   end

@@ -76,6 +76,12 @@ module Kramdown
         end
       end
 
+      def convert_blockquote(el, opts)
+        # No newline because BBCode will add one itself.  We also run
+        # results_to_text so we can clean up trailing newlines.
+        tag("quote", nil, results_to_text(inner(el, opts)))
+      end
+
       def convert_codeblock(el, opts)
         # No newline because BBCode will add one itself.
         tag("code", nil, el.value.sub(/\n\z/, ''))
@@ -86,7 +92,7 @@ module Kramdown
       end
       
       def convert_root(el, opts)
-        inner(el, opts).flatten.compact.join.sub(/\n+\z/, '')
+        results_to_text(inner(el, opts))
       end
 
       def tag(name, arg, content)
@@ -95,6 +101,10 @@ module Kramdown
         else
           ["[#{name}]", content, "[/#{name}]"]
         end
+      end
+
+      def results_to_text(results)
+        results.flatten.compact.join.sub(/\n+\z/, '')
       end
     end
   end
