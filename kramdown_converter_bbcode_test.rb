@@ -19,6 +19,19 @@ class TestKramdownConverterBbcode < Test::Unit::TestCase
     assert_bbcode("Hello\n\nThere", "Hello\n\nThere")
   end
 
+  def test_should_process_headers
+    assert_bbcode("[b]Hello[/b]", "# Hello")
+  end
+
+  def test_should_process_codeblocks
+    assert_bbcode("[code]Hello\nthere[/code]", "    Hello\n    there")
+  end
+
+  def test_should_process_image
+    assert_bbcode("[img]http://example.com/f.png[/img]",
+                  "![](http://example.com/f.png)")
+  end
+
   def test_should_process_styling_tags
     assert_bbcode("[i]Hello[/i]", "_Hello_")
     assert_bbcode("[b]Hello[/b]", "**Hello**")

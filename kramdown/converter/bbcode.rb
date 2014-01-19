@@ -23,6 +23,10 @@ module Kramdown
         result
       end
 
+      def convert_header(el, opts)
+        tag("b", nil, inner(el, opts)) + ["\n"]
+      end
+
       def convert_p(el, opts)
         inner(el, opts) + ["\n"]
       end
@@ -70,6 +74,15 @@ module Kramdown
         else
           tag("td", nil, inner(el, opts))
         end
+      end
+
+      def convert_codeblock(el, opts)
+        # No newline because BBCode will add one itself.
+        tag("code", nil, el.value.sub(/\n\z/, ''))
+      end
+
+      def convert_img(el, opts)
+        tag("img", nil, el.attr['src'])
       end
       
       def convert_root(el, opts)
