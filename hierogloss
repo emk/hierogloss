@@ -8,6 +8,7 @@ require 'optparse'
 
 require_relative 'kramdown/parser/hierogloss'
 require_relative 'kramdown/converter/bbcode'
+require_relative 'kramdown/converter/htlal'
 
 options = { format: 'html' }
 
@@ -15,7 +16,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: hierogloss [options] files..."
 
   opts.on("-f", "--format [FORMAT]",
-          "Output format (html, bbcode)",
+          "Output format (html, bbcode, htlal)",
           "  (defaults to html)") do |format|
     options[:format] = format
   end
