@@ -1,5 +1,3 @@
-require_relative "../../gloss.rb"
-
 module Kramdown
   module Converter
     class Bbcode < Base
@@ -50,14 +48,26 @@ module Kramdown
         tag("url", el.attr['href'], inner(el, opts))
       end
 
-      def convert_smart_quote(el, indent)
+      def convert_smart_quote(el, opts)
         entity_to_str(smart_quote_entity(el))
       end
 
-      def convert_gloss(el, opts)
-        format_table(el.value) + ["\n"]
+      def convert_table(el, opts)
+        tag("table", nil, ["\n"] + inner(el, opts))
       end
 
+      def convert_tr(el, opts)
+        tag("tr", nil, inner(el, opts)) + ["\n"]
+      end
+
+      def convert_td(el, opts)
+        if el.attr['class'] == 'hieroglyphs'
+          tag("td", nil, tag("size", "24", inner(el, opts)))
+        else
+          tag("td", nil, inner(el, opts))
+        end
+      end
+      
       def convert_root(el, opts)
         inner(el, opts).flatten.compact.join.sub(/\n+\z/, '')
       end

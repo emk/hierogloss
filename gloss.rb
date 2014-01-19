@@ -2,42 +2,74 @@
 
 require_relative 'dictionary'
 
-class RowFormatter
+class Row
   def initialize(row_text)
     @columns = row_text.split(/\|/).map {|c| c.strip }
   end
 
-  def to_bbcode
-    cols = @columns.map {|c| "[td]#{column_to_bbcode(c)}[/td]" }
-    "[tr]#{cols.join(" ")}[/tr]"
+  def span?
+    false
   end
 
-  def column_to_bbcode(col)
-    col
+  def attributes
+    attrs = {}
+    attrs['class'] = class_attr if class_attr
+    attrs
+  end
+  
+  def class_attr
+    nil
+  end
+
+  def to_kramdown
+    attrs = attributes
+    tr = Kramdown::Element.new(:tr, nil, attrs)
+    @columns.each do |c|
+      td = Kramdown::Element.new(:td, nil, attrs)
+      children = cell_to_kramdown(c)
+      if children.kind_of?(Array)
+        td.children.concat(children)
+      else
+        td.children << children
+      end
+      tr.children << td
+    end
+    tr
+  end
+
+  def cell_to_kramdown(cell)
+    Kramdown::Element.new(:text, cell)
   end
 
   def search_link(query, text)
-    search_url = "http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche"
+    base_url = "http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche"
     escaped_query = CGI.escape(query)
-    "[url=#{search_url}?search=#{escaped_query}&go=Lire]#{text}[/url]"
+    url = "#{base_url}?search=#{escaped_query}&go=Lire"
+
+    link = Kramdown::Element.new(:a, nil, {'href' => url})
+    link.children << Kramdown::Element.new(:text, text)
+    link
   end
 end
 
-class UnicodeHieroglyphRowFormatter < RowFormatter
-  def column_to_bbcode(col)
-    linked = col.chars.map do |c|
+class UnicodeHieroglyphRow < Row
+  def class_attr
+    'hieroglyphs'
+  end
+
+  def cell_to_kramdown(cell)
+    cell.chars.map do |c|
       gardiner = Dictionary.gardiner(c)
       if !gardiner.nil?
         search_link("Signe:#{gardiner}", c)
       else
-        c
+        Kramdown::Element.new(:text, text)
       end
-    end.join
-    "[size=24]#{linked}[/size]"
+    end
   end
 end
 
-class TransliterationRowFormatter < RowFormatter
+class TransliterationRow < Row
   JR_TRANSLITERATION = {
     "A" => "ꜣ",
     "i" => "j",
@@ -52,36 +84,65 @@ class TransliterationRowFormatter < RowFormatter
     "D" => "ḏ"
   }
 
-  def column_to_bbcode(col)
-    fancy = self.class.fancy(col)
-    search_link(Dictionary.headword(col), fancy)
-  end
-
   def self.fancy(tl)
     tl.chars.map {|c| JR_TRANSLITERATION[c] || c }.join
   end
+
+  def class_attr
+    'transliteration'
+  end
+
+  def cell_to_bbcode(cell)
+    fancy = self.class.fancy(cell)
+    search_link(Dictionary.headword(cell), fancy)
+  end
 end
 
-def format_table(table)
-  output = ["[table]\n"]
-  translation = nil
-  rows = table.lines.map {|l| l.chomp }
-  rows.each do |row|
-    row =~ /\A(\w+):(.*)\z/
-    raise "C'est quoi, [[#{row}]]\?" unless $1 && $2
-    formatter =
-      case $1
-      when "U" then formatter = UnicodeHieroglyphRowFormatter
-      when "L" then formatter = TransliterationRowFormatter
-      when "T" then translation = $2.strip; next
-      else formatter = RowFormatter
+class TranslationRow
+  def initialize(row_text)
+    @text = row_text
+  end
+
+  def span?
+    true
+  end
+
+  def to_kramdown
+    em = Kramdown::Element.new(:em)
+    em.children << Kramdown::Element.new(:text, @text)
+    em
+  end
+end
+
+class Gloss
+  def initialize(text)
+    @rows = text.lines.map {|l| l.chomp }.map do |row|
+      row =~ /\A(\w+):(.*)\z/
+      raise "C'est quoi, [[#{row}]]\?" unless $1 && $2
+      type =
+        case $1
+        when "U" then UnicodeHieroglyphRow
+        when "L" then TransliterationRow
+        when "T" then TranslationRow
+        else Row
+        end
+      type.new($2)
+    end
+  end
+
+  def to_kramdown
+    result = []
+    # Neither Kramdown nor BBCode support rowspans, so we'll just cheat
+    # for now.
+    @rows.chunk {|r| r.span? }.each do |spans, rows|
+      if spans
+        rows.each {|r| result << r.to_kramdown }
+      else
+        table = Kramdown::Element.new(:table)
+        rows.each {|r| table.children << r.to_kramdown }
+        result << table
       end
-    output << formatter.new($2).to_bbcode + "\n"
+    end
+    result
   end
-  if translation
-    output << "[/table][i]#{translation}[/i]"
-  else
-    output << "[/table]"
-  end
-  output
 end

@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+require_relative '../../gloss'
+
 module Kramdown
   module Parser
     class Hierogloss < ::Kramdown::Parser::Kramdown
@@ -8,28 +9,13 @@ module Kramdown
         @block_parsers.unshift(:gloss)
       end
 
-      JR_TRANSLITERATION = {
-        "A" => "ꜣ",
-        "i" => "j",
-        "a" => "ꜥ",
-        "H" => "ḥ",
-        "x" => "ḫ",
-        "X" => "ẖ",
-        "S" => "š",
-        "q" => "ḳ",
-        "K" => "ḳ",
-        "T" => "ṯ",
-        "D" => "ḏ"
-      }
-    
       TRANSLIT_START = /{.*?}/
     
       def parse_translit
         @src.pos += @src.matched_size
         mdc = @src.matched[1..-2]
-        text = mdc.chars.map {|c| JR_TRANSLITERATION[c] || c }.join
         em = Element.new(:em)
-        em.children << Element.new(:text, text)
+        em.children << Element.new(:text, TransliterationRow.fancy(mdc))
         @tree.children << em
       end
       define_parser(:translit, TRANSLIT_START, '{')
@@ -40,8 +26,7 @@ module Kramdown
       def parse_gloss
         start_line_number = @src.current_line_number
         data = @src.scan(self.class::GLOSS_MATCH)
-        @tree.children <<
-          new_block_el(:gloss, data, nil, :location => start_line_number)
+        @tree.children.concat(Gloss.new(data).to_kramdown)
         true
       end
 

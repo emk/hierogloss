@@ -44,8 +44,8 @@ G: homme | femme
 EOD
     table = <<EOD.sub(/\n$/, '')
 [table]
-[tr][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url][/size][/td] [td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AB1&go=Lire]𓁐[/url][/size][/td][/tr]
-[tr][td]homme[/td] [td]femme[/td][/tr]
+[tr][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url][/size][/td][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AB1&go=Lire]𓁐[/url][/size][/td][/tr]
+[tr][td]homme[/td][td]femme[/td][/tr]
 [/table]
 EOD
     assert_bbcode(table, gloss)
