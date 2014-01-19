@@ -39,7 +39,7 @@ class TestDictionary < Test::Unit::TestCase
   end
 
   def test_should_provide_gardiner_signs_for_most_signs
-    assert_equal("A1", Dictionary.gardiner("﻿𓀀"))
+    assert_equal("A1", Dictionary.gardiner("𓀀"))
     assert_equal("D4", Dictionary.gardiner("𓁹"))
   end
 

@@ -2,7 +2,7 @@
 
 module Dictionary
   GARDINER = {}
-  File.open("Unicode-MdC-Mapping-v1.utf8", "r") do |f|
+  File.open("Unicode-MdC-Mapping-v1.utf8", "r:bom|utf-8") do |f|
     f.each_line do |l|
       l.chomp!
       sign, hex, codes, remarks = l.split(/\t/, 4)
