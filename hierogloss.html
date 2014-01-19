@@ -16,8 +16,25 @@ end
     <meta name="generator" content="hierogloss kramdown <%= ::Kramdown::VERSION %>" />
 
     <style type="text/css">
-      td { padding-right: 10px; }
-      td.hieroglyphs { font-size: 24px; }
+      .gloss td { padding-right: 18px; }
+      .gloss td.hieroglyphs { font-size: 24px; }
+      .gloss .transliteration {
+        font-family: "Aegyptus", "Gardiner", serif;
+        font-size: 18pt;
+      }
+      .gloss {
+        margin-left: 18px;
+      }
+      p.gloss {
+        margin-top: 0;
+      }
+      table.gloss a:link, table.gloss a:visited {
+        color: black;
+        text-decoration: none;
+      }
+      table.gloss a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>

@@ -137,12 +137,13 @@ class Gloss
     @rows.chunk {|r| r.span? }.each do |spans, rows|
       if spans
         rows.each do |r|
-          p = Kramdown::Element.new(:p)
+          p = Kramdown::Element.new(:p, nil, 'class' => 'gloss')
           p.children << r.to_kramdown
           result << p
         end
       else
-        table = Kramdown::Element.new(:table, nil, nil, alignment: [])
+        table = Kramdown::Element.new(:table, nil, { 'class' => 'gloss' },
+                                      alignment: [])
         tbody = Kramdown::Element.new(:tbody)
         table.children << tbody
         rows.each {|r| tbody.children << r.to_kramdown }
