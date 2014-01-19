@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"> 
+<%
+# This code from Kramdown's default template.
+extend ::Kramdown::Utils::Html
+title = 'Hierogloss'
+h = @converter.root.children.find {|c| c.type == :header}
+if h
+  collector = lambda {|c| c.children.collect {|cc| cc.type == :text ? escape_html(cc.value, :text) : collector.call(cc)}.join('')}
+  title = collector.call(h)
+end
+%>
+    <title><%= title %></title>
+    <meta name="generator" content="hierogloss kramdown <%= ::Kramdown::VERSION %>" />
+
+    <style type="text/css">
+      td { padding-right: 10px; }
+      td.hieroglyphs { font-size: 24px; }
+    </style>
+  </head>
+  <body>
+
+<%= @body %>
+
+  </body>
+</html>

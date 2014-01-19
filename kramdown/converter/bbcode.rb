@@ -56,6 +56,10 @@ module Kramdown
         tag("table", nil, ["\n"] + inner(el, opts))
       end
 
+      def convert_tbody(el, opts)
+        inner(el, opts)
+      end
+
       def convert_tr(el, opts)
         tag("tr", nil, inner(el, opts)) + ["\n"]
       end

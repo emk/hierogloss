@@ -4,7 +4,27 @@ require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default)
 
+require 'optparse'
+
 require_relative 'kramdown/parser/hierogloss'
 require_relative 'kramdown/converter/bbcode'
 
-puts Kramdown::Document.new(ARGF.read, input: 'hierogloss').to_bbcode
+options = { format: 'html' }
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: hierogloss [options] files..."
+
+  opts.on("-f", "--format [FORMAT]",
+          "Output format (html, bbcode)",
+          "  (defaults to html)") do |format|
+    options[:format] = format
+  end
+end.parse!
+
+args = { input: 'hierogloss' }
+if options[:format] == 'html'
+  args[:template] = 'hierogloss.html'
+end
+
+doc = Kramdown::Document.new(ARGF.read, args)
+puts doc.send("to_#{options[:format]}")

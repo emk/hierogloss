@@ -63,7 +63,7 @@ class UnicodeHieroglyphRow < Row
       if !gardiner.nil?
         search_link("Signe:#{gardiner}", c)
       else
-        Kramdown::Element.new(:text, text)
+        Kramdown::Element.new(:text, c)
       end
     end
   end
@@ -92,7 +92,7 @@ class TransliterationRow < Row
     'transliteration'
   end
 
-  def cell_to_bbcode(cell)
+  def cell_to_kramdown(cell)
     fancy = self.class.fancy(cell)
     search_link(Dictionary.headword(cell), fancy)
   end
@@ -108,7 +108,7 @@ class TranslationRow
   end
 
   def to_kramdown
-    em = Kramdown::Element.new(:em)
+    em = Kramdown::Element.new(:em)    
     em.children << Kramdown::Element.new(:text, @text)
     em
   end
@@ -136,10 +136,16 @@ class Gloss
     # for now.
     @rows.chunk {|r| r.span? }.each do |spans, rows|
       if spans
-        rows.each {|r| result << r.to_kramdown }
+        rows.each do |r|
+          p = Kramdown::Element.new(:p)
+          p.children << r.to_kramdown
+          result << p
+        end
       else
-        table = Kramdown::Element.new(:table)
-        rows.each {|r| table.children << r.to_kramdown }
+        table = Kramdown::Element.new(:table, nil, nil, alignment: [])
+        tbody = Kramdown::Element.new(:tbody)
+        table.children << tbody
+        rows.each {|r| tbody.children << r.to_kramdown }
         result << table
       end
     end
