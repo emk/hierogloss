@@ -16,14 +16,23 @@ end
     <meta name="generator" content="hierogloss kramdown <%= ::Kramdown::VERSION %>" />
 
     <style type="text/css">
+      @font-face {
+	font-family: 'WebGardiner';
+	src: url('fonts/Gardiner.eot');
+	src: local('☺'), url('fonts/Gardiner.woff') format('woff'), url('fonts/Gardiner.ttf') format('truetype'), url('fonts/Gardiner.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+      }
+
       .gloss td { padding-right: 18px; }
       .gloss td.hieroglyphs { font-size: 24px; }
       .gloss .transliteration {
-        font-family: "Aegyptus", "Gardiner", serif;
+        font-family: "WebGardiner", "Aegyptus", "Gardiner", serif;
         font-size: 18pt;
       }
       .gloss {
         margin-left: 18px;
+        page-break-inside: avoid;
       }
       p.gloss {
         margin-top: 0;
@@ -35,6 +44,7 @@ end
       table.gloss a:hover {
         text-decoration: underline;
       }
+      p { page-break-inside: avoid; }
     </style>
   </head>
   <body>
