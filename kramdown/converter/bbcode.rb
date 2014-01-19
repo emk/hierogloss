@@ -55,7 +55,7 @@ module Kramdown
       end
 
       def convert_gloss(el, opts)
-        format_table(el.value)
+        format_table(el.value) + ["\n"]
       end
 
       def convert_root(el, opts)
