@@ -35,13 +35,13 @@ class TestKramdownConverterBbcode < Test::Unit::TestCase
 
   def test_should_handle_gloss_blocks
     gloss = <<EOD
-U: 𓀀
-G: homme
+U: 𓀀 | 𓁐
+G: homme | femme
 EOD
     table = <<EOD.sub(/\n$/, '')
 [table]
-[tr][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url][/size][/td][/tr]
-[tr][td]homme[/td][/tr]
+[tr][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url][/size][/td] [td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AB1&go=Lire]𓁐[/url][/size][/td][/tr]
+[tr][td]homme[/td] [td]femme[/td][/tr]
 [/table]
 EOD
     assert_bbcode(table, gloss)

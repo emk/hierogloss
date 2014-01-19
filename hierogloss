@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:default)
+
+require_relative 'kramdown/parser/hierogloss'
+require_relative 'kramdown/converter/bbcode'
+
+puts Kramdown::Document.new(ARGF.read, input: 'hierogloss').to_bbcode
