@@ -1,3 +1,5 @@
+require_relative "../../gloss.rb"
+
 module Kramdown
   module Converter
     class Bbcode < Base
@@ -44,6 +46,10 @@ module Kramdown
 
       def convert_a(el, opts)
         tag("url", el.attr['href'], inner(el, opts))
+      end
+
+      def convert_gloss(el, opts)
+        format_table(el.value)
       end
 
       def convert_root(el, opts)

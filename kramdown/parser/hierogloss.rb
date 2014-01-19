@@ -5,6 +5,7 @@ module Kramdown
       def initialize(source, options)
         super
         @span_parsers.unshift(:translit)
+        @block_parsers.unshift(:gloss)
       end
 
       JR_TRANSLITERATION = {
@@ -32,6 +33,19 @@ module Kramdown
         @tree.children << em
       end
       define_parser(:translit, TRANSLIT_START, '{')
+
+      GLOSS_START = /^(U|L|G|T):/
+      GLOSS_MATCH = /((^(U|L|G|T):.*)\r?\n)*/
+
+      def parse_gloss
+        start_line_number = @src.current_line_number
+        data = @src.scan(self.class::GLOSS_MATCH)
+        @tree.children <<
+          new_block_el(:gloss, data, nil, :location => start_line_number)
+        true
+      end
+
+      define_parser(:gloss, GLOSS_START)
     end
   end
 end

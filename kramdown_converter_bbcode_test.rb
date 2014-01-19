@@ -10,8 +10,8 @@ require_relative 'kramdown/converter/bbcode'
 
 class TestKramdownConverterBbcode < Test::Unit::TestCase
   def assert_bbcode(bbcode, text)
-    assert_equal(bbcode,
-                 Kramdown::Document.new(text, input: 'hierogloss').to_bbcode)
+    actual = Kramdown::Document.new(text, input: 'hierogloss').to_bbcode
+    assert_equal(bbcode, actual)
   end
 
   def test_should_process_paragraphs
@@ -31,5 +31,19 @@ class TestKramdownConverterBbcode < Test::Unit::TestCase
 
   def test_should_handle_inline_transliteration
     assert_bbcode("[i]mꜣꜥ ḫrw[/i]", "{mAa xrw}")
+  end
+
+  def test_should_handle_gloss_blocks
+    gloss = <<EOD
+U: 𓀀
+G: homme
+EOD
+    table = <<EOD.sub(/\n$/, '')
+[table]
+[tr][td][size=24][url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url][/size][/td][/tr]
+[tr][td]homme[/td][/tr]
+[/table]
+EOD
+    assert_bbcode(table, gloss)
   end
 end
