@@ -100,7 +100,7 @@ end
 
 class TranslationRow
   def initialize(row_text)
-    @text = row_text
+    @text = row_text.strip
   end
 
   def span?
