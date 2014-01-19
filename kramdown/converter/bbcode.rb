@@ -37,7 +37,7 @@ module Kramdown
 
       def convert_text(el, opts)
         # Wouldn't it be nice if we could escape BBCode?
-        el.value
+        el.value.gsub(/\s+/, ' ') # Ignore newlines in raw text.
       end
 
       def convert_em(el, opts)
