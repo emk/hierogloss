@@ -1,3 +1,25 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'hierogloss'
+
+options = { format: 'html' }
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: hierogloss [options] files..."
+
+  opts.on("-f", "--format [FORMAT]",
+          "Output format (html, bbcode, htlal)",
+          "  (defaults to html)") do |format|
+    options[:format] = format
+  end
+end.parse!
+
+args = { input: 'hierogloss' }
+if options[:format] == 'html'
+  args[:template] =
+    File.join(File.dirname(__FILE__), '..', 'data', 'hierogloss.html.erb')
+end
+
+doc = Kramdown::Document.new(ARGF.read, args)
+puts doc.send("to_#{options[:format]}")
