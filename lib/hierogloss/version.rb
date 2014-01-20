@@ -1,0 +1,3 @@
+module Hierogloss
+  VERSION = "0.0.1"
+end
