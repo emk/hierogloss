@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:default)
-
-require 'test/unit'
-require_relative 'kramdown/parser/hierogloss'
-require_relative 'kramdown/converter/bbcode'
-
-class TestKramdownConverterBbcode < Test::Unit::TestCase
+class TestKramdownExtensions < Minitest::Test
   def assert_bbcode(bbcode, text)
     actual = Kramdown::Document.new(text, input: 'hierogloss').to_bbcode
     assert_equal(bbcode, actual)

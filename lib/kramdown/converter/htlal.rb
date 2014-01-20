@@ -1,5 +1,8 @@
 module Kramdown
   module Converter
+    # Outputs some of the most common Markdown elements in a stripped down
+    # BBCode dialect without table support or reliable font size control.
+    # Everything in this class is internal.
     class Htlal < Bbcode
       include ::Kramdown::Utils::Html
 

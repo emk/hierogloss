@@ -1,7 +1,7 @@
-require_relative '../../gloss'
-
 module Kramdown
   module Parser
+    # Parses an extended Kramdown syntax with support for inline glosses.
+    # Everything in this class is internal.
     class Hierogloss < ::Kramdown::Parser::Kramdown
       def initialize(source, options)
         super
@@ -15,7 +15,8 @@ module Kramdown
         @src.pos += @src.matched_size
         mdc = @src.matched[1..-2]
         em = Element.new(:em, nil, 'class' => 'transliteration')
-        em.children << Element.new(:text, TransliterationRow.fancy(mdc))
+        em.children <<
+          Element.new(:text, ::Hierogloss::TransliterationRow.fancy(mdc))
         @tree.children << em
       end
       define_parser(:translit, TRANSLIT_START, '{')
@@ -26,7 +27,7 @@ module Kramdown
       def parse_gloss
         start_line_number = @src.current_line_number
         data = @src.scan(self.class::GLOSS_MATCH)
-        @tree.children.concat(Gloss.new(data).to_kramdown)
+        @tree.children.concat(::Hierogloss::Gloss.new(data).to_kramdown)
         true
       end
 

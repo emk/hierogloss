@@ -1,5 +1,7 @@
 module Kramdown
   module Converter
+    # Outputs some of the most common Markdown elements as BBCode.
+    # Everything in this class is internal.
     class Bbcode < Base
       include ::Kramdown::Utils::Html
 
