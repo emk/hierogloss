@@ -30,7 +30,7 @@ module Hierogloss
       attrs = attributes
       tr = Kramdown::Element.new(:tr, nil, attrs)
       raw_cells.each do |c|
-        td = Kramdown::Element.new(:td, nil, attrs)
+        td = Kramdown::Element.new(:td)
         children = cell_to_kramdown(c)
         if children.kind_of?(Array)
           td.children.concat(children)
@@ -60,7 +60,7 @@ module Hierogloss
   #:nodoc:
   class HieroglyphRow < Row
     def class_attr
-      'hieroglyphs'
+      'hgls-h'
     end
 
     def cell_to_kramdown(cell)
@@ -96,7 +96,7 @@ module Hierogloss
     end
 
     def class_attr
-      'transliteration'
+      'hgls-l'
     end
 
     def cell_to_kramdown(cell)
@@ -117,8 +117,12 @@ module Hierogloss
       true
     end
 
+    def class_attr
+      'hgls-t'
+    end
+
     def to_kramdown
-      em = Kramdown::Element.new(:em)    
+      em = Kramdown::Element.new(:em, nil)
       em.children << Kramdown::Element.new(:text, text)
       em
     end
@@ -150,12 +154,13 @@ module Hierogloss
       rows.chunk {|r| r.span? }.each do |spans, rows|
         if spans
           rows.each do |r|
-            p = Kramdown::Element.new(:p, nil, 'class' => 'gloss')
+            class_attr = "hgls-gloss #{r.class_attr}"
+            p = Kramdown::Element.new(:p, nil, 'class' => class_attr)
             p.children << r.to_kramdown
             result << p
           end
         else
-          table = Kramdown::Element.new(:table, nil, { 'class' => 'gloss' },
+          table = Kramdown::Element.new(:table, nil, { 'class' => 'hgls-gloss' },
                                         alignment: [])
           tbody = Kramdown::Element.new(:tbody)
           table.children << tbody

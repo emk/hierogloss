@@ -71,7 +71,7 @@ module Kramdown
       end
 
       def convert_td(el, opts)
-        if el.attr['class'] == 'hieroglyphs'
+        if @stack.last.first.attr['class'] == 'hgls-h'
           tag("td", nil, tag("size", "24", inner(el, opts)))
         else
           tag("td", nil, inner(el, opts))

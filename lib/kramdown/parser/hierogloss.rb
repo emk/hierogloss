@@ -14,7 +14,7 @@ module Kramdown
       def parse_translit
         @src.pos += @src.matched_size
         mdc = @src.matched[1..-2]
-        em = Element.new(:em, nil, 'class' => 'transliteration')
+        em = Element.new(:em, nil, 'class' => 'hgls-l')
         em.children <<
           Element.new(:text, ::Hierogloss::TransliterationRow.fancy(mdc))
         @tree.children << em
