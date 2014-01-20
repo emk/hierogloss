@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
+require 'minitest_helper'
 
-require 'test/unit'
-require_relative 'dictionary'
-
-class TestDictionary < Test::Unit::TestCase
+class TestDictionary < Minitest::Test
   def assert_hw(headword, word)
-    assert_equal(headword, Dictionary.headword(word))
+    assert_equal(headword, Hierogloss::Dictionary.headword(word))
   end
 
   def test_should_leave_simple_headwords_alone
@@ -39,14 +37,14 @@ class TestDictionary < Test::Unit::TestCase
   end
 
   def test_should_provide_gardiner_signs_for_most_signs
-    assert_equal("A1", Dictionary.gardiner("𓀀"))
-    assert_equal("D4", Dictionary.gardiner("𓁹"))
+    assert_equal("A1", Hierogloss::Dictionary.gardiner("𓀀"))
+    assert_equal("D4", Hierogloss::Dictionary.gardiner("𓁹"))
   end
 
   def test_should_not_provide_gardiner_signs_for_uniliterals
     # Let's not link these common characters.
     "𓄿𓇋𓏭𓂝𓅱𓏲𓃀𓊪𓆑𓅓𓈖𓂋𓉔𓎛𓐍𓄡𓊃𓋴𓈙𓈎𓎡𓎼𓏏𓍿𓂧𓆓".each_char do |c|
-      assert_nil(Dictionary.gardiner(c), "should not translate #{c}")
+      assert_nil(Hierogloss::Dictionary.gardiner(c), "should not translate #{c}")
     end
   end
 end
