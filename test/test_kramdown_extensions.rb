@@ -53,7 +53,7 @@ class TestKramdownExtensions < Minitest::Test
 
   def test_should_handle_gloss_blocks
     gloss = <<EOD
-U: 𓇋𓀀 | 𓁐
+H: 𓇋𓀀 | 𓁐
 G: homme | femme
 EOD
     table = <<EOD.sub(/\n$/, '')

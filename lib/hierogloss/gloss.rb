@@ -58,7 +58,7 @@ module Hierogloss
   end
 
   #:nodoc:
-  class UnicodeHieroglyphRow < Row
+  class HieroglyphRow < Row
     def class_attr
       'hieroglyphs'
     end
@@ -134,7 +134,7 @@ module Hierogloss
         raise "C'est quoi, [[#{row}]]\?" unless $1 && $2
         type =
           case $1
-          when "U" then UnicodeHieroglyphRow
+          when "H" then HieroglyphRow
           when "L" then TransliterationRow
           when "T" then TranslationRow
           else Row

@@ -21,8 +21,8 @@ module Kramdown
       end
       define_parser(:translit, TRANSLIT_START, '{')
 
-      GLOSS_START = /^(U|L|G|T):/
-      GLOSS_MATCH = /((^(U|L|G|T):.*)\r?\n)*/
+      GLOSS_START = /^(H|L|G|T):/
+      GLOSS_MATCH = /((^(H|L|G|T):.*)\r?\n)*/
 
       def parse_gloss
         start_line_number = @src.current_line_number
