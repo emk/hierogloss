@@ -1,5 +1,3 @@
-**Markdown** {wab}
-
 U: 𓃂 | 𓏠𓈖𓍿𓅱𓊵𓏏𓊪 | 𓁹𓈖 | 𓎛𓏌𓏏
 L: wab | mnTw-Htp | ir(w)~n | Hnw.t
 G: prêtre | Mentouhotep | né de | Henout
