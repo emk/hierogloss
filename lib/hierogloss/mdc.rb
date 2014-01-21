@@ -12,9 +12,12 @@ module Hierogloss
       rule(:unicode_sign) { match('[\u{13000}-\u{1342F}]') }
       rule(:sign) { (alpha_sign | unicode_sign).as(:sign) >> space? }
 
+      # Parenthesized blocks.
+      rule(:parens) { str('(') >> space? >> sequence >> str(')') >> space? }
+
       # "Terminal" chunks in our expression grammar, which will match
-      # an actual, concrete symbol.
-      rule(:terminal) { sign }
+      # an actual, concrete symbol in the first position.
+      rule(:atomic) { sign | parens }
 
       # A list of items with separators between them.
       def separated(item, separator)
@@ -22,7 +25,7 @@ module Hierogloss
       end
 
       # Nested lists of signs separated by "*".
-      rule(:juxtaposed) { separated(terminal, str('*')).as(:juxtaposed) }
+      rule(:juxtaposed) { separated(atomic, str('*')).as(:juxtaposed) }
 
       # Stacks of signs separated by ":".
       rule(:stack) { separated(juxtaposed, str(':')).as(:stack) }

@@ -28,4 +28,8 @@ class TestCodage < MiniTest::Test
   def test_should_parse_juxtaposed_signs
     assert_parse([[:stack, "𓇾", ["𓏤", "𓈇"]]], "𓇾:𓏤*𓈇")
   end
+
+  def test_should_honor_parens
+    assert_parse([[:stack, ["p", [:stack, "t", "Z4"]], "pt"]], "p*(t:Z4):pt")
+  end
 end
