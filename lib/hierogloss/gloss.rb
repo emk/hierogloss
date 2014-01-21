@@ -59,14 +59,17 @@ module Hierogloss
 
   #:nodoc:
   class HieroglyphRow < Row
+    UNLINKED = {}
+    "𓄿𓇋𓏭𓂝𓅱𓏲𓃀𓊪𓆑𓅓𓈖𓂋𓉔𓎛𓐍𓄡𓊃𓋴𓈙𓈎𓎡𓎼𓏏𓍿𓂧𓆓".each_char {|c| UNLINKED[c] = true }
+
     def class_attr
       'hgls-h'
     end
 
     def cell_to_kramdown(cell)
       cell.chars.map do |c|
-        gardiner = Dictionary.gardiner(c)
-        if !gardiner.nil?
+        gardiner = Dictionary.sign_to_gardiner(c)
+        unless gardiner.nil? || UNLINKED[c]
           search_link("Signe:#{gardiner}", c)
         else
           Kramdown::Element.new(:text, c)

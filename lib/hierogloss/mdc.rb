@@ -13,32 +13,77 @@ module Hierogloss
         @name = name
       end
 
+      def to_unicode
+        Hierogloss::Dictionary.mdc_to_sign(name) || name
+      end
+
       def to_debug
         name
       end
+
+      def to_linear_hieroglyphs
+        to_unicode
+      end
+
+      def to_mdc(precedence)
+        mdc = Hierogloss::Dictionary.sign_to_mdc(name) || name
+        # Wrap composite signs in parens.
+        return "(#{mdc})" if mdc =~ /[-:*]/
+        mdc
+      end
     end
 
-    class Sequence < Block
+    class Group < Block
       attr_reader :blocks
 
       def initialize(blocks)
         @blocks = blocks
-      end
+      end      
 
       def to_debug
         blocks.map {|b| b.to_debug }
       end
-    end
 
-    class Stack < Block
-      attr_reader :blocks
-
-      def initialize(blocks)
-        @blocks = blocks
+      def to_linear_hieroglyphs
+        blocks.map {|b| b.to_linear_hieroglyphs }
       end
 
+      protected
+
+      # This whole precedence business may need more test cases further work.
+      def maybe_parens(current, context, str)
+        if current < context
+          "(#{str})"
+        else
+          str
+        end
+      end
+    end
+
+    class Sequence < Group
+      def to_mdc(precedence)
+        maybe_parens(2, precedence, blocks.map {|b| b.to_mdc(2) }.join("*"))
+      end
+    end
+
+    class Stack < Group
       def to_debug
-        [:stack].concat(blocks.map {|b| b.to_debug })
+        [:stack].concat(super)
+      end
+
+      def to_mdc(precedence)
+        maybe_parens(1, precedence, blocks.map {|b| b.to_mdc(1) }.join(":"))
+      end
+    end
+
+    class Quadrats < Group
+      # Actually render to a string here.
+      def to_linear_hieroglyphs
+        super.flatten.join
+      end
+
+      def to_mdc
+        blocks.map {|b| b.to_mdc(0) }.join("-")
       end
     end
 
@@ -86,14 +131,14 @@ module Hierogloss
       end
 
       rule(head: subtree(:head), rest: sequence(:rest)) { [head].concat(rest) }
-      rule(sign: simple(:sign)) { Sign.new(sign) }
+      rule(sign: simple(:sign)) { Sign.new(sign.to_s) }
       rule(stack: subtree(:list)) {|d| lists_as(Stack, d[:list]) }
       rule(juxtaposed: subtree(:list)) {|d| lists_as(Sequence, d[:list]) }
     end
 
     def self.parse(input)
       parsed = Parser.new.parse(input)
-      Sequence.new(Transform.new.apply(parsed))
+      Quadrats.new(Transform.new.apply(parsed))
     end
   end
 end

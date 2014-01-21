@@ -6,34 +6,52 @@ module Hierogloss
     DATA_DIR = File.join(File.dirname(__FILE__), '..', '..', 'data')
     MDC_MAPPING_PATH = File.join(DATA_DIR, "Unicode-MdC-Mapping-v1.utf8")
 
-    GARDINER = {}
+    SIGN_TO_GARDINER = {}
+    MDC_TO_SIGN = {}
+    SIGN_TO_MDC = {}
+
     File.open(MDC_MAPPING_PATH, "r:bom|utf-8") do |f|
       f.each_line do |l|
         l.chomp!
         sign, hex, codes, remarks = l.split(/\t/, 4)
         for code in codes.split(/ /)
-          next unless code =~ /\A[A-Z][0-9]+\z/
-          GARDINER[sign] = code
+          MDC_TO_SIGN[code] = sign
+          # Unliterals.
+          SIGN_TO_MDC[sign] = code if code.length == 1
+          # Gardiner codes, and composite signs starting with Gardiner codes.
+          next unless code =~ /\A[A-Z][0-9]+([-:*].*)?\z/
+          SIGN_TO_GARDINER[sign] = code
+          SIGN_TO_MDC[sign] ||= code
         end
       end
     end
-    "𓄿𓇋𓏭𓂝𓅱𓏲𓃀𓊪𓆑𓅓𓈖𓂋𓉔𓎛𓐍𓄡𓊃𓋴𓈙𓈎𓎡𓎼𓏏𓍿𓂧𓆓".each_char do |c|
-      GARDINER.delete(c)
-    end
 
-    # Try to kick things into shape for hierogl.ch.
-    def self.headword(word)
-      hw = word
-      hw.gsub!(/[()]/, '')
-      hw.sub!(/=.*\z/, '')
-      hw.sub!(/\.w?t\z/, 't')
-      hw.sub!(/\..*\z/, '')
-      hw
-    end
+    class << self
+      # Try to kick things into shape for hierogl.ch.
+      def headword(word)
+        hw = word
+        hw.gsub!(/[()]/, '')
+        hw.sub!(/=.*\z/, '')
+        hw.sub!(/\.w?t\z/, 't')
+        hw.sub!(/\..*\z/, '')
+        hw
+      end
 
-    # Given a Unicode hieroglyph, get the corresponding Gardiner sign.
-    def self.gardiner(sign)
-      GARDINER[sign]
+      # Given a Unicode hieroglyph, get the corresponding Gardiner sign.
+      def sign_to_gardiner(sign)
+        SIGN_TO_GARDINER[sign]
+      end
+
+      # Convert a Manuel de Codage transliteration to the corresponding Unicode
+      # sign.
+      def mdc_to_sign(mdc)
+        MDC_TO_SIGN[mdc]
+      end
+
+      # Convert a Unicode hieroglyph to a reasonable MdC representation.
+      def sign_to_mdc(sign)
+        SIGN_TO_MDC[sign]
+      end
     end
   end
 end

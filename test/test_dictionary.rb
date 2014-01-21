@@ -37,14 +37,7 @@ class TestDictionary < Minitest::Test
   end
 
   def test_should_provide_gardiner_signs_for_most_signs
-    assert_equal("A1", Hierogloss::Dictionary.gardiner("𓀀"))
-    assert_equal("D4", Hierogloss::Dictionary.gardiner("𓁹"))
-  end
-
-  def test_should_not_provide_gardiner_signs_for_uniliterals
-    # Let's not link these common characters.
-    "𓄿𓇋𓏭𓂝𓅱𓏲𓃀𓊪𓆑𓅓𓈖𓂋𓉔𓎛𓐍𓄡𓊃𓋴𓈙𓈎𓎡𓎼𓏏𓍿𓂧𓆓".each_char do |c|
-      assert_nil(Hierogloss::Dictionary.gardiner(c), "should not translate #{c}")
-    end
+    assert_equal("A1", Hierogloss::Dictionary.sign_to_gardiner("𓀀"))
+    assert_equal("D4", Hierogloss::Dictionary.sign_to_gardiner("𓁹"))
   end
 end
