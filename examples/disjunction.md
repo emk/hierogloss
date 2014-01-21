@@ -3,7 +3,7 @@
 This example is based on one in Allen's excellent [Middle Egyptian: An
 Introduction to the Language and Culture of Hieroglyphs][allen].
 
-H: 𓊃𓀀𓏤 | 𓊃𓏏𓁐 | 𓂋𓏤𓊪𓅱
+H: z:A1*Z1 | 𓊃:𓏏*𓁐 | 𓂋:𓏤-𓊪:𓅱
 L: s | s.t | r-pw
 G: man | woman | whichever
 T: either [a] man or [a] woman
