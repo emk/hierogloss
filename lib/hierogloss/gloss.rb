@@ -7,6 +7,7 @@ module Hierogloss
   #:nodoc:
   class Row
     attr_reader :raw_cells
+    alias :cells :raw_cells
 
     def initialize(row_text)
       @raw_cells = row_text.split(/\|/).map {|c| c.strip }
@@ -29,7 +30,7 @@ module Hierogloss
     def to_kramdown
       attrs = attributes
       tr = Kramdown::Element.new(:tr, nil, attrs)
-      raw_cells.each do |c|
+      cells.each do |c|
         td = Kramdown::Element.new(:td)
         children = cell_to_kramdown(c)
         if children.kind_of?(Array)
@@ -66,8 +67,12 @@ module Hierogloss
       'hgls-h'
     end
 
+    def cells
+      @cells ||= raw_cells.map {|c| Hierogloss::MdC.parse(c) }
+    end
+
     def cell_to_kramdown(cell)
-      cell.chars.map do |c|
+      cell.to_linear_hieroglyphs.chars.map do |c|
         gardiner = Dictionary.sign_to_gardiner(c)
         unless gardiner.nil? || UNLINKED[c]
           search_link("Signe:#{gardiner}", c)

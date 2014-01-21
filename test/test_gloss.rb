@@ -6,7 +6,7 @@ class TestGloss < MiniTest::Test
 
   def setup
     input = <<EOD
-H: 𓊃𓀀𓏤 | 𓊃𓏏𓁐
+H: 𓊃:𓀀*𓏤 | z:t*B1
 L: s | s.t
 G: homme | femme
 T: l'homme et la femme
@@ -22,7 +22,9 @@ EOD
 
   def test_should_parse_gloss_into_appropriate_rows
     assert_equal(4, @gloss.rows.length)
-    assert_row(HieroglyphRow, ["𓊃𓀀𓏤", "𓊃𓏏𓁐"], @gloss.rows[0])
+    assert_row(HieroglyphRow, ["𓊃:𓀀*𓏤", "z:t*B1"], @gloss.rows[0])
+    assert_equal(["𓊃𓀀𓏤", "𓊃𓏏𓁐"],
+                 @gloss.rows[0].cells.map {|c| c.to_linear_hieroglyphs })
     assert_row(TransliterationRow, ["s", "s.t"], @gloss.rows[1])
     assert_row(Row, ["homme", "femme"], @gloss.rows[2])
 
