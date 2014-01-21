@@ -1,6 +1,7 @@
 require 'kramdown'
 require "hierogloss/version"
 require "hierogloss/dictionary"
+require "hierogloss/mdc"
 require "hierogloss/gloss"
 require "kramdown/parser/hierogloss"
 require "kramdown/converter/bbcode"
