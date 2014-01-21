@@ -2,8 +2,10 @@
 
 **WORK IN PROGRESS. Future releases may change how things work.**
 
-Hierogloss allows you to mix glossed hieroglyphic texts with Markdown-style
-formatting.  For example, you can write:
+Hierogloss is a set of extensions for the [Kramdown][] gem for people
+working with hieroglyphs.  Hierogloss allows you to mix glossed
+hieroglyphic texts with Markdown-style formatting.  For example, you can
+write:
 
     # Disjunction in Middle Egyptian
 
@@ -70,3 +72,5 @@ but pass `input: 'hierogloss'` as an argument:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+[kramdown]: http://kramdown.gettalong.org/
