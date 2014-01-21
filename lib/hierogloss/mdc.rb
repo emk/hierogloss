@@ -1,7 +1,47 @@
 require 'parslet'
 
 module Hierogloss
+  #:nodoc: Our parser for the Manuel de Codage format.
   module MdC
+    class Block
+    end
+
+    class Sign < Block
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+      end
+
+      def to_debug
+        name
+      end
+    end
+
+    class Sequence < Block
+      attr_reader :blocks
+
+      def initialize(blocks)
+        @blocks = blocks
+      end
+
+      def to_debug
+        blocks.map {|b| b.to_debug }
+      end
+    end
+
+    class Stack < Block
+      attr_reader :blocks
+
+      def initialize(blocks)
+        @blocks = blocks
+      end
+
+      def to_debug
+        [:stack].concat(blocks.map {|b| b.to_debug })
+      end
+    end
+
     class Parser < Parslet::Parser
       # Whitespace and equivalent delimiters.
       rule(:space) { match('[-_ ]').repeat(1) }
@@ -35,26 +75,25 @@ module Hierogloss
     end
 
     class Transform < Parslet::Transform
-      # Prune out unused chunks of structure.
-      def self.maybe_unpack(list, label=nil)
+      # If we only have one item, we don't need to build an extra wrapper
+      # class; we can just pass it up.
+      def self.lists_as(klass, list)
         if list.length == 1
           list.first
-        elsif label
-          [label].concat(list)
         else
-          list
+          klass.new(list)
         end
       end
 
-      rule(head: subtree(:head), rest: subtree(:rest)) { [head].concat(rest) }
-      rule(sign: simple(:sign)) { sign }
-      rule(stack: subtree(:list)) {|d| maybe_unpack(d[:list], :stack) }
-      rule(juxtaposed: subtree(:list)) {|d| maybe_unpack(d[:list]) }
+      rule(head: subtree(:head), rest: sequence(:rest)) { [head].concat(rest) }
+      rule(sign: simple(:sign)) { Sign.new(sign) }
+      rule(stack: subtree(:list)) {|d| lists_as(Stack, d[:list]) }
+      rule(juxtaposed: subtree(:list)) {|d| lists_as(Sequence, d[:list]) }
     end
 
     def self.parse(input)
       parsed = Parser.new.parse(input)
-      Transform.new.apply(parsed)
+      Sequence.new(Transform.new.apply(parsed))
     end
   end
 end

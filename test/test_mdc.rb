@@ -3,7 +3,7 @@ require 'minitest_helper'
 
 class TestCodage < MiniTest::Test
   def assert_parse(expected, input)
-    assert_equal(expected, Hierogloss::MdC.parse(input))
+    assert_equal(expected, Hierogloss::MdC.parse(input).to_debug)
   end
 
   def test_should_parse_separated_signs
