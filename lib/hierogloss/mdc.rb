@@ -108,7 +108,7 @@ module Hierogloss
 
       def to_mdc_image_url
         esc = URI.escape(to_mdc, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-        "http://mdc-images.herokuapp.com/mdc/#{esc}.png"
+        "http://i.hierogloss.net/mdc/#{esc}.png"
       end
     end
 

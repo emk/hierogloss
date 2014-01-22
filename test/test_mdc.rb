@@ -64,7 +64,7 @@ class TestCodage < MiniTest::Test
   end
 
   def test_should_convert_to_mdc_image_url
-    assert_mdc_image_url("http://mdc-images.herokuapp.com/mdc/p*(t%3AZ4)%3Apt.png",
+    assert_mdc_image_url("http://i.hierogloss.net/mdc/p*(t%3AZ4)%3Apt.png",
                          "p*(t:Z4):pt")
   end
 end
