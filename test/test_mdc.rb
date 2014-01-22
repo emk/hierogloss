@@ -29,6 +29,10 @@ class TestCodage < MiniTest::Test
     assert_parse([[:stack, "𓇾", ["𓏤", "𓈇"]]], "𓇾:𓏤*𓈇")
   end
 
+  def test_should_parse_composed_signs
+    assert_parse([[:composed, "𓅱", "𓏏"]], "𓅱&𓏏")
+  end
+
   def test_should_honor_parens
     assert_parse([[:stack, ["p", [:stack, "t", "Z4"]], "pt"]], "p*(t:Z4):pt")
   end
@@ -40,6 +44,7 @@ class TestCodage < MiniTest::Test
   def test_should_convert_mdc_to_linear_hieroglyphs
     assert_linear_hieroglyphs("𓆓𓂧𓈖", "𓆓:𓂧𓈖")
     assert_linear_hieroglyphs("𓊪𓏏𓏭𓇯", "p*(t:Z4):pt")
+    assert_linear_hieroglyphs("𓅱𓏏", "𓅱&𓏏")
   end
 
   def assert_mdc(expected, input)
@@ -49,6 +54,7 @@ class TestCodage < MiniTest::Test
   def test_should_convert_mdc_to_mdc_string
     assert_mdc("D:d-n", "𓆓:𓂧𓈖")
     assert_mdc("p*(t:Z4):pt", "p*(t:Z4):pt")
+    assert_mdc("w&t", "𓅱&𓏏")
     # Compound signs are always placed in parens.
     assert_mdc("(N33*N33:N33*N33)", "𓃌")
   end
