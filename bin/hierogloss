@@ -3,7 +3,7 @@
 require 'optparse'
 require 'hierogloss'
 
-options = { format: 'html' }
+options = { format: 'html', images: false }
 
 OptionParser.new do |opts|
   opts.banner = "Usage: hierogloss [options] files..."
@@ -13,9 +13,15 @@ OptionParser.new do |opts|
           "  (defaults to html)") do |format|
     options[:format] = format
   end
+
+  opts.on("-i", "--[no-]images",
+          "Use inline images to render hieroglyphs",
+          "  (defaults to off)") do |images|
+    options[:images] = images
+  end
 end.parse!
 
-args = { input: 'hierogloss' }
+args = { input: 'hierogloss', use_images_for_signs: options[:images] }
 if options[:format] == 'html'
   args[:template] =
     File.join(File.dirname(__FILE__), '..', 'data', 'hierogloss.html.erb')
