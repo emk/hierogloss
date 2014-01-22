@@ -52,4 +52,13 @@ class TestCodage < MiniTest::Test
     # Compound signs are always placed in parens.
     assert_mdc("(N33*N33:N33*N33)", "𓃌")
   end
+
+  def assert_mdc_image_url(expected, input)
+    assert_equal(expected, Hierogloss::MdC.parse(input).to_mdc_image_url)
+  end
+
+  def test_should_convert_to_mdc_image_url
+    assert_mdc_image_url("http://mdc-images.herokuapp.com/mdc/p*(t%3AZ4)%3Apt.png",
+                         "p*(t:Z4):pt")
+  end
 end

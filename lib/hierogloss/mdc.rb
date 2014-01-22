@@ -85,6 +85,11 @@ module Hierogloss
       def to_mdc
         blocks.map {|b| b.to_mdc(0) }.join("-")
       end
+
+      def to_mdc_image_url
+        esc = URI.escape(to_mdc, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+        "http://mdc-images.herokuapp.com/mdc/#{esc}.png"
+      end
     end
 
     class Parser < Parslet::Parser
