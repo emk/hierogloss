@@ -42,4 +42,8 @@ EOD
     assert(kramdown.length > 0)
     kramdown.each {|k| assert_instance_of(Kramdown::Element, k) }
   end
+
+  def test_should_be_convertible_to_kramdown_with_images
+    kramdown = @gloss.to_kramdown(use_images_for_signs: true)
+  end
 end

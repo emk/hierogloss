@@ -27,7 +27,8 @@ module Kramdown
       def parse_gloss
         start_line_number = @src.current_line_number
         data = @src.scan(self.class::GLOSS_MATCH)
-        @tree.children.concat(::Hierogloss::Gloss.new(data).to_kramdown)
+        elems = ::Hierogloss::Gloss.new(data).to_kramdown(@options)
+        @tree.children.concat(elems)
         true
       end
 
