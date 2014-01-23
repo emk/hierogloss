@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 require 'hierogloss/dictionary'
 
 module Hierogloss
