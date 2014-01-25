@@ -3,12 +3,12 @@
 require 'optparse'
 require 'hierogloss'
 
-options = { format: 'html', images: false }
+options = { format: 'html', images: false, translit: :jy_unicode }
 
 OptionParser.new do |opts|
   opts.banner = "Usage: hierogloss [options] files..."
 
-  opts.on("-f", "--format [FORMAT]",
+  opts.on("-f", "--format FORMAT",
           "Output format (html, bbcode, htlal)",
           "  (defaults to html)") do |format|
     options[:format] = format
@@ -19,9 +19,19 @@ OptionParser.new do |opts|
           "  (defaults to off)") do |images|
     options[:images] = images
   end
+
+  opts.on("-t", "--translit TRANSLIT",
+          "Output transliteration convention (jy_unicode, mdc)",
+          "  (defaults to jy_unicode)") do |translit|
+    options[:translit] = translit.to_sym
+  end
 end.parse!
 
-args = { input: 'hierogloss', use_images_for_signs: options[:images] }
+args = {
+  input: 'hierogloss',
+  use_images_for_signs: options[:images],
+  transliteration: options[:translit]
+}
 if options[:format] == 'html'
   args[:template] =
     File.join(File.dirname(__FILE__), '..', 'data', 'hierogloss.html.erb')

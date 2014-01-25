@@ -88,30 +88,12 @@ module Hierogloss
 
   #:nodoc:
   class TransliterationRow < Row
-    JR_TRANSLITERATION = {
-      "A" => "ꜣ",
-      "i" => "j",
-      "a" => "ꜥ",
-      "H" => "ḥ",
-      "x" => "ḫ",
-      "X" => "ẖ",
-      "S" => "š",
-      "q" => "ḳ",
-      "K" => "ḳ",
-      "T" => "ṯ",
-      "D" => "ḏ"
-    }
-
-    def self.fancy(tl)
-      tl.chars.map {|c| JR_TRANSLITERATION[c] || c }.join
-    end
-
     def class_attr
       'hgls-l'
     end
 
     def cell_to_kramdown(cell, options)
-      fancy = self.class.fancy(cell)
+      fancy = Hierogloss::Transliteration.render(cell, options[:transliteration])
       search_link(Dictionary.headword(cell), fancy)
     end
   end
