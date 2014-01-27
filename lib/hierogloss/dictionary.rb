@@ -6,6 +6,18 @@ module Hierogloss
     DATA_DIR = File.join(File.dirname(__FILE__), '..', '..', 'data')
     MDC_MAPPING_PATH = File.join(DATA_DIR, "Unicode-MdC-Mapping-v1.utf8")
 
+    # Pattern identifying Gardiner codes (as opposed to phonetic ones.
+    GARDINER_REGEX = /\A[A-Z][0-9]+[A-Za-z]?([-:*\\].*)?\z/
+
+    # Convert variant signs to something that should work in JSesh.
+    def self.fix_gardiner(code)
+      if code =~ GARDINER_REGEX
+        code.upcase.sub(/\\R/, '\r')
+      else
+        code
+      end
+    end
+
     SIGN_TO_GARDINER = {}
     MDC_TO_SIGN = {}
     SIGN_TO_MDC = {}
@@ -15,11 +27,12 @@ module Hierogloss
         l.chomp!
         sign, hex, codes, remarks = l.split(/\t/, 4)
         for code in codes.split(/ /)
+          code = fix_gardiner(code)
           MDC_TO_SIGN[code] = sign
           # Unliterals.
           SIGN_TO_MDC[sign] = code if code.length == 1
           # Gardiner codes, and composite signs starting with Gardiner codes.
-          next unless code =~ /\A[A-Z][0-9]+([-:*].*)?\z/
+          next unless code =~ GARDINER_REGEX
           SIGN_TO_GARDINER[sign] = code
           SIGN_TO_MDC[sign] ||= code
         end

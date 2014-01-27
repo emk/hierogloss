@@ -40,4 +40,13 @@ class TestDictionary < Minitest::Test
     assert_equal("A1", Hierogloss::Dictionary.sign_to_gardiner("𓀀"))
     assert_equal("D4", Hierogloss::Dictionary.sign_to_gardiner("𓁹"))
   end
+
+  def test_should_convert_variant_signs_to_gardiner
+    # These signs aren't in the Unicode table.
+    assert_equal("E8A", Hierogloss::Dictionary.sign_to_gardiner("𓃚"))
+    assert_equal("N33A", Hierogloss::Dictionary.sign_to_gardiner("𓈓"))
+    assert_equal("N35A", Hierogloss::Dictionary.sign_to_gardiner("𓈗"))
+    assert_equal("P1A", Hierogloss::Dictionary.sign_to_gardiner("𓊜"))
+    assert_equal("Y1\\r1", Hierogloss::Dictionary.sign_to_gardiner("𓏜"))
+  end
 end
