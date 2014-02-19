@@ -16,8 +16,13 @@ module Kramdown
 
       def convert_tr(el, opts)
         spaced = []
+        if el.attr['class'] == 'hgls-h'
+          sep = " &nbsp; "
+        else
+          sep = " | "
+        end
         inner(el, opts).each do |td|
-          spaced << td << " | "
+          spaced << td << sep
         end
         spaced.pop
         spaced << "\n"

@@ -64,7 +64,7 @@ EOD
 EOD
     assert_bbcode(table, gloss)
     without_table = <<EOD.sub(/\n$/, '')
-𓇋[url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url] | [url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AB1&go=Lire]𓁐[/url]
+𓇋[url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AA1&go=Lire]𓀀[/url] &nbsp; [url=http://www.hierogl.ch/hiero/Sp%C3%A9cial:Recherche?search=Signe%3AB1&go=Lire]𓁐[/url]
 homme | femme
 EOD
     assert_htlal_bbcode(without_table, gloss)
